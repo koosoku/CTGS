@@ -1,9 +1,12 @@
+const model = require('./model.js')
 
-module.exports.register = ({body: {username, password}}, res) => {
-    res.send("Register")
+module.exports.register = ({body: {username, password, permission}}, res) => {
+    model.register(username, password, permission, () => {
+        res.send('Register' )
+    })
 }
 
-module.exports.login = (req, res) => {)
+module.exports.login = (req, res) => {
     req.session.username = req.body.username
     res.send("Login")
 }
