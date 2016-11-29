@@ -1,0 +1,11 @@
+CREATE TABLE supervisors (
+    username  VARCHAR(50) PRIMARY KEY,
+    password  VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE students (
+  username  VARCHAR(50) PRIMARY KEY,
+  password  VARCHAR(100) NOT NULL,
+  supervisor VARCHAR(50),
+  FOREIGN KEY (supervisor) REFERENCES supervisors (username)
+);

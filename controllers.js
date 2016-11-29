@@ -1,9 +1,15 @@
 const model = require('./model.js')
 
-module.exports.register = ({body: {username, password, permission}}, res) => {
-    model.register(username, password, permission, () => {
-        res.send('Register' )
-    })
+module.exports.register = ({body: {username, password, role, supervisor}}, res) => {
+    if (role === 'supervisor') {
+        model.registerSupervisor(username, password, () => {
+            res.send('Registered Supervisor' )
+        })
+    } else if (role === 'student') {
+        model.registerStudent(username, password, supervisor, () => {
+            res.send('Registered Student' )
+        })
+    }
 }
 
 module.exports.login = (req, res) => {
