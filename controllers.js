@@ -14,7 +14,22 @@ module.exports.register = ({body: {username, password, role, supervisor}}, res) 
 
 module.exports.login = (req, res) => {
     req.session.username = req.body.username
-    res.send("Login")
+    var {username, password, role} = req.body
+    if (role === 'supervisor') {
+        model.loginSupervisor(username, password, (err) => {
+            if(err)
+                res.send('Login failed')
+            else
+                res.send('Successfully logged in!')
+        })
+    } else if (role === 'student') {
+        model.loginStudent(username, password, (err) => {
+            if(err)
+                res.send('Login failed')
+            else
+                res.send('Successfully logged in!')
+        })
+    }
 }
 
 module.exports.createNewApplication = (req, res) => {
