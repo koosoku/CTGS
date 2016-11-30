@@ -4,8 +4,17 @@ CREATE TABLE supervisors (
 );
 
 CREATE TABLE students (
-  username  VARCHAR(50) PRIMARY KEY,
-  password  VARCHAR(100) NOT NULL,
-  supervisor VARCHAR(50),
-  FOREIGN KEY (supervisor) REFERENCES supervisors (username)
+    username  VARCHAR(50) PRIMARY KEY,
+    password  VARCHAR(100) NOT NULL,
+    supervisor VARCHAR(50),
+    FOREIGN KEY (supervisor) REFERENCES supervisors (username)
+);
+
+CREATE TABLE applications (
+    registration INT,
+    transportation INT,
+    accomidation INT,
+    meals INT,
+    owner VARCHAR(50),
+    FOREIGN KEY (owner) REFERENCES students (username)
 );
