@@ -1,22 +1,24 @@
 CREATE TABLE supervisors (
-    username  VARCHAR(50) PRIMARY KEY,
-    password  VARCHAR(100) NOT NULL
-);
+      username  VARCHAR(50) PRIMARY KEY,
+      password  VARCHAR(100) NOT NULL,
+      name VARCHAR(50)
+  );
 
-CREATE TABLE students (
-    username  VARCHAR(50) PRIMARY KEY,
-    password  VARCHAR(100) NOT NULL
-);
+  CREATE TABLE students (
+      username  VARCHAR(50) PRIMARY KEY,
+      password  VARCHAR(100) NOT NULL,
+      name VARCHAR(50)
+  );
 
-CREATE TABLE applications (
-    id SERIAL,
-    registration  DOUBLE PRECISION,
-    transportation DOUBLE PRECISION,
-    accomidation DOUBLE PRECISION,
-    meals DOUBLE PRECISION,
-    owner VARCHAR(50) NOT NULL,
-    supervisor VARCHAR(50) NOT NULL,
-    recommendation TEXT,
-    FOREIGN KEY (owner) REFERENCES students (username),
-    FOREIGN KEY (supervisor) REFERENCES supervisors (username)
-);
+  CREATE TABLE applications (
+      id SERIAL,
+      registration  DOUBLE PRECISION,
+      transportation DOUBLE PRECISION,
+      accomidation DOUBLE PRECISION,
+      meals DOUBLE PRECISION,
+      owner VARCHAR(50) NOT NULL,
+      supervisor VARCHAR(50) NOT NULL,
+      recommendation TEXT,
+      FOREIGN KEY (owner) REFERENCES students (username),
+      FOREIGN KEY (supervisor) REFERENCES supervisors (username)
+  );

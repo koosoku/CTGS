@@ -1,11 +1,11 @@
 const db = require('pg-bricks').configure('postgres://koosoku:keyboardcat@localhost:5432/CTGS')
 
-module.exports.registerSupervisor = (username, password, callback) => {
-    db.insert('supervisors', {username, password}).run(callback)
+module.exports.registerSupervisor = (username, password, name, callback) => {
+    db.insert('supervisors', {username, password, name}).run(callback)
 }
 
-module.exports.registerStudent = (username, password, callback) => {
-    db.insert('students', {username, password}).run(callback)
+module.exports.registerStudent = (username, password, name, callback) => {
+    db.insert('students', {username, password, name}).run(callback)
 }
 
 module.exports.loginSupervisor = (username, password, callback) => {
@@ -41,4 +41,10 @@ module.exports.checkAuthorization = (username, applicationId, callback) => {
 
 module.exports.makeRecommendation = (recommendation, applicationId, callback) => {
     db.update('applications', {recommendation}).where('id', applicationId).run(callback)
+}
+
+module.exports.getStudents = (callback) => {
+    db.select('name').from('students').rows((err, rows) => {
+        callback(err, rows)
+    })
 }

@@ -1,15 +1,15 @@
 const model = require('./model.js')
 
-module.exports.register = ({body: {username, password, role, supervisor}}, res) => {
+module.exports.register = ({body: {username, password, role, name}}, res) => {
     if (role === 'supervisor') {
-        model.registerSupervisor(username, password, (err) => {
+        model.registerSupervisor(username, password, name, (err) => {
             if(err)
                 res.send('supervisor registration failed')
             else
                 res.send('Registered Supervisor' )
         })
     } else if (role === 'student') {
-        model.registerStudent(username, password, (err) => {
+        model.registerStudent(username, password, name, (err) => {
             if(err)
                 res.send('student registration failed')
             else
@@ -83,4 +83,19 @@ module.exports.makeRecommendation = (req, res) => {
         })
 
     }
+}
+
+module.exports.getStudents = (req, res) => {
+    model.getStudents((err, students) => {
+        if(err)
+            res.send({
+                err,
+                data: null
+            })
+        else
+            res.send({
+                err: null,
+                data: students
+            })
+    })
 }
