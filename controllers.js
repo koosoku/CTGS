@@ -115,3 +115,18 @@ module.exports.getStudentsApplications = (req, res) => {
     })
 }
 
+
+module.exports.getSupervisorApplications = (req, res) => {
+    model.getSupervisorApplications(req.params.username, (err, applications) => {
+        if(err)
+            res.send({
+                err,
+                data: null
+            })
+        else
+            res.send({
+                err: null,
+                data: applications
+            })
+    })
+}
