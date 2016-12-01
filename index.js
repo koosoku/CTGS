@@ -26,6 +26,6 @@ app.get('/students', controller.getStudents)
 app.get('/student/applications/:username', controller.getStudentsApplications)
 app.get('/supervisor/applications/:username', controller.getSupervisorApplications)
 app.get('/applications', controller.getApplications)
-// app.get('/application/:id', controller.getApplicationByID)
+app.get('/application/:id', controller.getApplicationByID)
 
 app.listen(8080)

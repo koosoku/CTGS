@@ -58,3 +58,7 @@ module.exports.getSupervisorApplications = (username, callback) => {
 module.exports.getApplications = (callback) => {
     db.select('*').from('applications').rows(callback)
 }
+
+module.exports.getApplicationByID = (id, callback) => {
+    db.select('*').from('applications').where('id',id).rows(callback)
+}

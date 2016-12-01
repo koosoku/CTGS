@@ -145,3 +145,18 @@ module.exports.getApplications = (req, res) => {
             })
     })
 }
+
+module.exports.getApplicationByID = (req, res) => {
+    model.getApplicationByID(req.params.id, (err, applications) => {
+        if(err)
+            res.send({
+                err,
+                data: null
+            })
+        else
+            res.send({
+                err: null,
+                data: applications
+            })
+    })
+}
