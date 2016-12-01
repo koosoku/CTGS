@@ -130,3 +130,18 @@ module.exports.getSupervisorApplications = (req, res) => {
             })
     })
 }
+
+module.exports.getApplications = (req, res) => {
+    model.getApplications((err, applications) => {
+        if(err)
+            res.send({
+                err,
+                data: null
+            })
+        else
+            res.send({
+                err: null,
+                data: applications
+            })
+    })
+}

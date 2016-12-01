@@ -54,3 +54,7 @@ module.exports.getStudentsApplications = (username, callback) => {
 module.exports.getSupervisorApplications = (username, callback) => {
     db.select('*').from('applications').where('supervisor', username).rows(callback)
 }
+
+module.exports.getApplications = (callback) => {
+    db.select('*').from('applications').rows(callback)
+}
