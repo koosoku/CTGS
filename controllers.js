@@ -2,12 +2,18 @@ const model = require('./model.js')
 
 module.exports.register = ({body: {username, password, role, supervisor}}, res) => {
     if (role === 'supervisor') {
-        model.registerSupervisor(username, password, () => {
-            res.send('Registered Supervisor' )
+        model.registerSupervisor(username, password, (err) => {
+            if(err)
+                res.send('supervisor registration failed')
+            else
+                res.send('Registered Supervisor' )
         })
     } else if (role === 'student') {
-        model.registerStudent(username, password, supervisor, () => {
-            res.send('Registered Student' )
+        model.registerStudent(username, password, (err) => {
+            if(err)
+                res.send('student registration failed')
+            else
+                res.send('Registered Student' )
         })
     }
 }
@@ -43,14 +49,13 @@ module.exports.login = (req, res) => {
 }
 
 module.exports.createNewApplication = (req, res) => {
-    var {registration, transportation, accomidation, meals, owner} = req.body
+    var {registration, transportation, accomidation, meals, supervisor} = req.body
 
-    if (req.session.role === 'supervisor'){
+    if (req.session.role === 'supervisor') {
         res.send("Supervisors cannot create applications")
-    }
-    else if (req.session.role === 'student'){
-        model.createNewApplication(registration, transportation, accomidation, meals, owner, (err) => {
-            if(err){
+    } else if (req.session.role === 'student') {
+        model.createNewApplication(registration, transportation, accomidation, meals, req.session.username, supervisor, (err) => {
+            if(err) {
                 res.send('Application Failed to Create')
             } else {
                 res.send('Successfully created an application!')
@@ -59,3 +64,23 @@ module.exports.createNewApplication = (req, res) => {
     }
 }
 
+module.exports.makeRecommendation = (req, res) => {
+    var {recommendation, applicationId} = req.body
+
+    if (req.session.role === 'student') {
+        res.send("student cannot make recommendations")
+    } else if (req.session.role === 'supervisor') {
+        model.checkAuthorization(req.session.username, applicationId, (err) => {
+            if(err)
+                res.send('Supevisor does not have authorization')
+            else
+                model.makeRecommendation(recommendation, applicationId, (err) => {
+                    if(err)
+                        res.send('Recoomendation Failed')
+                    else
+                        res.send("Recommendation made")
+                })
+        })
+
+    }
+}

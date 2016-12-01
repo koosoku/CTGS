@@ -4,8 +4,8 @@ module.exports.registerSupervisor = (username, password, callback) => {
     db.insert('supervisors', {username, password}).run(callback)
 }
 
-module.exports.registerStudent = (username, password, supervisor, callback) => {
-    db.insert('students', {username, password, supervisor}).run(callback)
+module.exports.registerStudent = (username, password, callback) => {
+    db.insert('students', {username, password}).run(callback)
 }
 
 module.exports.loginSupervisor = (username, password, callback) => {
@@ -26,6 +26,19 @@ module.exports.loginStudent = (username, password, callback) => {
     })
 }
 
-module.exports.createNewApplication = (registration, transportation, accomidation, meals, owner, callback) => {
-    db.insert('applications', {registration, transportation, accomidation, meals, owner}).run(callback)
+module.exports.createNewApplication = (registration, transportation, accomidation, meals, owner, supervisor, callback) => {
+    db.insert('applications', {registration, transportation, accomidation, meals, owner, supervisor}).run(callback)
+}
+
+module.exports.checkAuthorization = (username, applicationId, callback) => {
+    db.select('supervisor').from('applications').where('id', applicationId).row((err,row) => {
+        if(username === row.supervisor)
+            callback(null)
+        else
+            callback(true)
+    })
+}
+
+module.exports.makeRecommendation = (recommendation, applicationId, callback) => {
+    db.update('applications', {recommendation}).where('id', applicationId).run(callback)
 }
