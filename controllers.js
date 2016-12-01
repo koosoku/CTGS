@@ -14,12 +14,12 @@ module.exports.register = ({body: {username, password, role, supervisor}}, res) 
 
 module.exports.login = (req, res) => {
     var {username, password, role} = req.body
+    console.log(username, password, role)
     if (role === 'supervisor') {
         model.loginSupervisor(username, password, (err) => {
-            if(err){
+            if (err){
                 res.send('Login failed')
-            }
-            else{
+            } else {
                 req.session.username = username
                 req.session.role = role
                 res.send('Successfully logged in!')
@@ -28,24 +28,34 @@ module.exports.login = (req, res) => {
         })
     } else if (role === 'student') {
         model.loginStudent(username, password, (err) => {
-            if(err){
+            if (err){
                 res.send('Login failed')
-            }
-            else{
+            } else {
                 req.session.username = username
                 req.session.role = role
                 res.send('Successfully logged in!')
             }
 
         })
+    } else {
+        res.send('Wrong Role')
     }
 }
 
 module.exports.createNewApplication = (req, res) => {
-    console.log(req.session.role, req.session.username)
-    res.send("New Application")
+    var {registration, transportation, accomidation, meals, owner} = req.body
+
+    if (req.session.role === 'supervisor'){
+        res.send("Supervisors cannot create applications")
+    }
+    else if (req.session.role === 'student'){
+        model.createNewApplication(registration, transportation, accomidation, meals, owner, (err) => {
+            if(err){
+                res.send('Application Failed to Create')
+            } else {
+                res.send('Successfully created an application!')
+            }
+        })
+    }
 }
 
-module.exports.makeRecommendation = (req, res) => {
-    res.send("Make Recommendation")
-}

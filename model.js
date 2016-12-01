@@ -25,3 +25,7 @@ module.exports.loginStudent = (username, password, callback) => {
             callback(true)
     })
 }
+
+module.exports.createNewApplication = (registration, transportation, accomidation, meals, owner, callback) => {
+    db.insert('applications', {registration, transportation, accomidation, meals, owner}).run(callback)
+}

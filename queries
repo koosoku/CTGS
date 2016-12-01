@@ -11,10 +11,11 @@ CREATE TABLE students (
 );
 
 CREATE TABLE applications (
-    registration INT,
-    transportation INT,
-    accomidation INT,
-    meals INT,
-    owner VARCHAR(50),
+    registration  DOUBLE PRECISION,
+    transportation DOUBLE PRECISION,
+    accomidation DOUBLE PRECISION,
+    meals DOUBLE PRECISION,
+    owner VARCHAR(50) NOT NULL,
+    recommendation TEXT,
     FOREIGN KEY (owner) REFERENCES students (username)
 );
