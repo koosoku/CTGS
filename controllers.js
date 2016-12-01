@@ -99,3 +99,19 @@ module.exports.getStudents = (req, res) => {
             })
     })
 }
+
+module.exports.getStudentsApplications = (req, res) => {
+    model.getStudentsApplications(req.params.username, (err, applications) => {
+        if(err)
+            res.send({
+                err,
+                data: null
+            })
+        else
+            res.send({
+                err: null,
+                data: applications
+            })
+    })
+}
+

@@ -44,7 +44,9 @@ module.exports.makeRecommendation = (recommendation, applicationId, callback) =>
 }
 
 module.exports.getStudents = (callback) => {
-    db.select('name').from('students').rows((err, rows) => {
-        callback(err, rows)
-    })
+    db.select('name').from('students').rows(callback)
+}
+
+module.exports.getStudentsApplications = (username, callback) => {
+    db.select('*').from('applications').where('owner', username).rows(callback)
 }
