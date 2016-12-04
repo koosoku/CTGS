@@ -14,7 +14,7 @@ CREATE TABLE supervisors (
       id SERIAL,
       registration  DOUBLE PRECISION,
       transportation DOUBLE PRECISION,
-      accomidation DOUBLE PRECISION,
+      accommodation DOUBLE PRECISION,
       meals DOUBLE PRECISION,
       owner VARCHAR(50) NOT NULL,
       supervisor VARCHAR(50) NOT NULL,
