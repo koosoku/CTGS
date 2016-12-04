@@ -4,10 +4,6 @@ const cookieSession = require('cookie-session')
 var app = express()
 const controller = require('./controllers/controller.js')
 
-app.use((req, res, next) => {
-    next();
-});
-
 app.use(bodyParser.json())
 
 app.use(cookieSession({

@@ -1,7 +1,6 @@
 const model = require('../models/model.js')
 
-module.exports.register = ({body: {username, password, role, name}}, res) => {
-    console.log(username, password, role, name, email)
+module.exports.register = ({body: {username, password, role, name, email}}, res) => {
     if (role === 'supervisor') {
         model.registerSupervisor(username, password, name, email, (err) => {
             if(err)
@@ -52,12 +51,12 @@ module.exports.login = (req, res) => {
 }
 
 module.exports.createNewApplication = (req, res) => {
-    var {registration, transportation, accommodation, meals, supervisor} = req.body
+    var {registration, transportation, accommodation, meals, supervisor, conferenceDetail, presentationType, presentationTitle} = req.body
 
     if (req.session.role === 'supervisor') {
         res.status(403).send("Supervisors cannot create applications")
     } else if (req.session.role === 'student') {
-        model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, supervisor, (err) => {
+        model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, supervisor, conferenceDetail, presentationType, presentationTitle, (err) => {
             if(err) {
                 res.status(500).send('Application Failed to Create')
             } else {

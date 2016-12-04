@@ -3,15 +3,15 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10
 
 
-module.exports.registerSupervisor = (username, plainTextPassword, name, callback) => {
+module.exports.registerSupervisor = (username, plainTextPassword, name, email, callback) => {
     bcrypt.hash(plainTextPassword, saltRounds, function(err, password) {
-        db.insert('supervisors', {username, password, name}).run(callback)
+        db.insert('supervisors', {username, password, name, email}).run(callback)
     })
 }
 
-module.exports.registerStudent = (username, plainTextPassword, name, callback) => {
+module.exports.registerStudent = (username, plainTextPassword, name, email, callback) => {
     bcrypt.hash(plainTextPassword, saltRounds, function(err, password) {
-        db.insert('students', {username, password, name}).run(callback)
+        db.insert('students', {username, password, name, email}).run(callback)
     })
 }
 
@@ -37,8 +37,8 @@ module.exports.loginStudent = (username, password, callback) => {
     })
 }
 
-module.exports.createNewApplication = (registration, transportation, accomidation, meals, owner, supervisor, callback) => {
-    db.insert('applications', {registration, transportation, accomidation, meals, owner, supervisor}).run(callback)
+module.exports.createNewApplication = (registration, transportation, accomidation, meals, owner, supervisor, conference_detail, presentation_type, presentation_title, callback) => {
+    db.insert('applications', {registration, transportation, accomidation, meals, owner, supervisor, conference_detail, presentation_type, presentation_title}).run(callback)
 }
 
 module.exports.checkAuthorization = (username, applicationId, callback) => {
