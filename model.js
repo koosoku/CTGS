@@ -10,7 +10,7 @@ module.exports.registerStudent = (username, password, name, callback) => {
 
 module.exports.loginSupervisor = (username, password, callback) => {
     db.select('password').from('supervisors').where('username', username).row((err, row) => {
-        if(password === row.password)
+        if(row && password === row.password)
             callback(null)
         else
             callback(true)
@@ -19,15 +19,15 @@ module.exports.loginSupervisor = (username, password, callback) => {
 
 module.exports.loginStudent = (username, password, callback) => {
     db.select('password').from('students').where('username', username).row((err, row) => {
-        if(password === row.password)
+        if(row && password === row.password)
             callback(null)
         else
             callback(true)
     })
 }
 
-module.exports.createNewApplication = (registration, transportation, accomidation, meals, owner, supervisor, callback) => {
-    db.insert('applications', {registration, transportation, accomidation, meals, owner, supervisor}).run(callback)
+module.exports.createNewApplication = (registration, transportation, accommodation, meals, owner, supervisor, callback) => {
+    db.insert('applications', {registration, transportation, accommodation, meals, owner, supervisor}).run(callback)
 }
 
 module.exports.checkAuthorization = (username, applicationId, callback) => {
