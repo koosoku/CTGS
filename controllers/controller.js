@@ -4,16 +4,16 @@ module.exports.register = ({body: {username, password, role, name}}, res) => {
     if (role === 'supervisor') {
         model.registerSupervisor(username, password, name, (err) => {
             if(err)
-                res.send('supervisor registration failed')
+                res.status(500).send('supervisor registration failed')
             else
-                res.send('Registered Supervisor' )
+                res.status(201).send('Registered Supervisor' )
         })
     } else if (role === 'student') {
         model.registerStudent(username, password, name, (err) => {
             if(err)
-                res.send('student registration failed')
+                res.status(500).send('student registration failed')
             else
-                res.send('Registered Student' )
+                res.status(201).send('Registered Student' )
         })
     }
 }
@@ -24,41 +24,41 @@ module.exports.login = (req, res) => {
     if (role === 'supervisor') {
         model.loginSupervisor(username, password, (err) => {
             if (err){
-                res.send('Login failed')
+                res.status(401).send('Login failed')
             } else {
                 req.session.username = username
                 req.session.role = role
-                res.send('Successfully logged in!')
+                res.status(200).send('Successfully logged in!')
             }
 
         })
     } else if (role === 'student') {
         model.loginStudent(username, password, (err) => {
             if (err){
-                res.send('Login failed')
+                res.status(401).send('Login failed')
             } else {
                 req.session.username = username
                 req.session.role = role
-                res.send('Successfully logged in!')
+                res.status(200).send('Successfully logged in!')
             }
 
         })
     } else {
-        res.send('Wrong Role')
+        res.status(400).send('Wrong Role')
     }
 }
 
 module.exports.createNewApplication = (req, res) => {
-    var {registration, transportation, accomidation, meals, supervisor} = req.body
+    var {registration, transportation, accommodation, meals, supervisor} = req.body
 
     if (req.session.role === 'supervisor') {
-        res.send("Supervisors cannot create applications")
+        res.status(403).send("Supervisors cannot create applications")
     } else if (req.session.role === 'student') {
-        model.createNewApplication(registration, transportation, accomidation, meals, req.session.username, supervisor, (err) => {
+        model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, supervisor, (err) => {
             if(err) {
-                res.send('Application Failed to Create')
+                res.status(500).send('Application Failed to Create')
             } else {
-                res.send('Successfully created an application!')
+                res.status(201).send('Successfully created an application!')
             }
         })
     }
@@ -68,17 +68,17 @@ module.exports.makeRecommendation = (req, res) => {
     var {recommendation, applicationId} = req.body
 
     if (req.session.role === 'student') {
-        res.send("student cannot make recommendations")
+        res.status(403).send("student cannot make recommendations")
     } else if (req.session.role === 'supervisor') {
         model.checkAuthorization(req.session.username, applicationId, (err) => {
             if(err)
-                res.send('Supevisor does not have authorization')
+                res.status(401).send('Supevisor does not have authorization')
             else
                 model.makeRecommendation(recommendation, applicationId, (err) => {
                     if(err)
-                        res.send('Recoomendation Failed')
+                        res.status(500).send('Recoomendation Failed')
                     else
-                        res.send("Recommendation made")
+                        res.status(201).send("Recommendation made")
                 })
         })
 
@@ -88,12 +88,12 @@ module.exports.makeRecommendation = (req, res) => {
 module.exports.getStudents = (req, res) => {
     model.getStudents((err, students) => {
         if(err)
-            res.send({
+            res.status(500).send({
                 err,
                 data: null
             })
         else
-            res.send({
+            res.status(200).send({
                 err: null,
                 data: students
             })
@@ -103,12 +103,12 @@ module.exports.getStudents = (req, res) => {
 module.exports.getStudentsApplications = (req, res) => {
     model.getStudentsApplications(req.params.username, (err, applications) => {
         if(err)
-            res.send({
+            res.status(500).send({
                 err,
                 data: null
             })
         else
-            res.send({
+            res.status(200).send({
                 err: null,
                 data: applications
             })
@@ -119,12 +119,12 @@ module.exports.getStudentsApplications = (req, res) => {
 module.exports.getSupervisorApplications = (req, res) => {
     model.getSupervisorApplications(req.params.username, (err, applications) => {
         if(err)
-            res.send({
+            res.status(500).send({
                 err,
                 data: null
             })
         else
-            res.send({
+            res.status(200).send({
                 err: null,
                 data: applications
             })
@@ -134,12 +134,12 @@ module.exports.getSupervisorApplications = (req, res) => {
 module.exports.getApplications = (req, res) => {
     model.getApplications((err, applications) => {
         if(err)
-            res.send({
+            res.status(500).send({
                 err,
                 data: null
             })
         else
-            res.send({
+            res.status(200).send({
                 err: null,
                 data: applications
             })
@@ -149,12 +149,12 @@ module.exports.getApplications = (req, res) => {
 module.exports.getApplicationByID = (req, res) => {
     model.getApplicationByID(req.params.id, (err, applications) => {
         if(err)
-            res.send({
+            res.status(500).send({
                 err,
                 data: null
             })
         else
-            res.send({
+            res.status(200).send({
                 err: null,
                 data: applications
             })
