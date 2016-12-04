@@ -15,6 +15,8 @@ module.exports.register = ({body: {username, password, role, name}}, res) => {
             else
                 res.status(201).send('Registered Student' )
         })
+    } else {
+        res.status(403).send('Role not specified or the specified role is wrong.')
     }
 }
 
