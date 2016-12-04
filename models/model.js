@@ -17,35 +17,29 @@ module.exports.registerStudent = (username, plainTextPassword, name, email, call
 
 module.exports.loginSupervisor = (username, password, callback) => {
     db.select('password').from('supervisors').where('username', username).row((err, row) => {
-/*<<<<<<< HEAD:model.js
-        if(row && password === row.password)
-            callback(null)
-        else
+        if (row) {
+            bcrypt.compare(password, row.password, function (err, passwordMatches) {
+                if (passwordMatches)
+                    callback(null)
+                else
+                    callback(true)
+            })
+        } else
             callback(true)
-=======*/
-        bcrypt.compare(password, row.password, function(err, passwordMatches) {
-            if(passwordMatches)
-                callback(null)
-            else
-                callback(true)
-        })
     })
 }
 
 module.exports.loginStudent = (username, password, callback) => {
     db.select('password').from('students').where('username', username).row((err, row) => {
-/*<<<<<<< HEAD:model.js
-        if(row && password === row.password)
-            callback(null)
-        else
+        if (row) {
+            bcrypt.compare(password, row.password, function (err, passwordMatches) {
+                if (passwordMatches)
+                    callback(null)
+                else
+                    callback(true)
+            })
+        } else
             callback(true)
-=======*/
-        bcrypt.compare(password, row.password, function(err, passwordMatches) {
-            if(passwordMatches)
-                callback(null)
-            else
-                callback(true)
-        })
     })
 }
 
