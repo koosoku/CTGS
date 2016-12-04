@@ -9,6 +9,12 @@ module.exports.registerSupervisor = (username, plainTextPassword, name, email, c
     })
 }
 
+module.exports.registerAdmin = (username, plainTextPassword, name, email, callback) => {
+    bcrypt.hash(plainTextPassword, saltRounds, function(err, password) {
+        db.insert('admins', {username, password, name, email}).run(callback)
+    })
+}
+
 module.exports.registerStudent = (username, plainTextPassword, name, email, callback) => {
     bcrypt.hash(plainTextPassword, saltRounds, function(err, password) {
         db.insert('students', {username, password, name, email}).run(callback)
@@ -28,6 +34,17 @@ module.exports.loginSupervisor = (username, password, callback) => {
 
 module.exports.loginStudent = (username, password, callback) => {
     db.select('password').from('students').where('username', username).row((err, row) => {
+        bcrypt.compare(password, row.password, function(err, passwordMatches) {
+            if(passwordMatches)
+                callback(null)
+            else
+                callback(true)
+        })
+    })
+}
+
+module.exports.loginAdmin = (username, password, callback) => {
+    db.select('password').from('admins').where('username', username).row((err, row) => {
         bcrypt.compare(password, row.password, function(err, passwordMatches) {
             if(passwordMatches)
                 callback(null)
