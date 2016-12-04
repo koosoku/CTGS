@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 var app = express()
-const controller = require('./controllers.js')
+const controller = require('./controllers/controller.js')
 
 app.use(bodyParser.urlencoded({
     extended: true

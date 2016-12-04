@@ -1,4 +1,4 @@
-const model = require('./model.js')
+const model = require('../models/model.js')
 
 module.exports.register = ({body: {username, password, role, name}}, res) => {
     if (role === 'supervisor') {
