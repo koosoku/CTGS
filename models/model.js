@@ -1,28 +1,39 @@
 const db = require('pg-bricks').configure('postgres://koosoku:keyboardcat@localhost:5432/CTGS')
+const bcrypt = require('bcrypt')
+const saltRounds = 10
 
-module.exports.registerSupervisor = (username, password, name, callback) => {
-    db.insert('supervisors', {username, password, name}).run(callback)
+
+module.exports.registerSupervisor = (username, plainTextPassword, name, callback) => {
+    bcrypt.hash(plainTextPassword, saltRounds, function(err, password) {
+        db.insert('supervisors', {username, password, name}).run(callback)
+    })
 }
 
-module.exports.registerStudent = (username, password, name, callback) => {
-    db.insert('students', {username, password, name}).run(callback)
+module.exports.registerStudent = (username, plainTextPassword, name, callback) => {
+    bcrypt.hash(plainTextPassword, saltRounds, function(err, password) {
+        db.insert('students', {username, password, name}).run(callback)
+    })
 }
 
 module.exports.loginSupervisor = (username, password, callback) => {
     db.select('password').from('supervisors').where('username', username).row((err, row) => {
-        if(password === row.password)
-            callback(null)
-        else
-            callback(true)
+        bcrypt.compare(password, row.password, function(err, passwordMatches) {
+            if(passwordMatches)
+                callback(null)
+            else
+                callback(true)
+        })
     })
 }
 
 module.exports.loginStudent = (username, password, callback) => {
     db.select('password').from('students').where('username', username).row((err, row) => {
-        if(password === row.password)
-            callback(null)
-        else
-            callback(true)
+        bcrypt.compare(password, row.password, function(err, passwordMatches) {
+            if(passwordMatches)
+                callback(null)
+            else
+                callback(true)
+        })
     })
 }
 

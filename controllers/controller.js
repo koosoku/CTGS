@@ -1,6 +1,7 @@
 const model = require('../models/model.js')
 
 module.exports.register = ({body: {username, password, role, name}}, res) => {
+    console.log(username, password, role, name)
     if (role === 'supervisor') {
         model.registerSupervisor(username, password, name, (err) => {
             if(err)
