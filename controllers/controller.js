@@ -1,6 +1,7 @@
-const model = require('./model.js')
+const model = require('../models/model.js')
 
 module.exports.register = ({body: {username, password, role, name}}, res) => {
+    console.log(username, password, role, name)
     if (role === 'supervisor') {
         model.registerSupervisor(username, password, name, (err) => {
             if(err)
@@ -15,6 +16,8 @@ module.exports.register = ({body: {username, password, role, name}}, res) => {
             else
                 res.status(201).send('Registered Student' )
         })
+    } else {
+        res.status(403).send('Role not specified or the specified role is wrong.')
     }
 }
 

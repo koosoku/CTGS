@@ -3,8 +3,12 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 var app = express()
-const controller = require('./controllers.js')
+const controller = require('./controllers/controller.js')
 const path = require('path')
+
+app.use((req, res, next) => {
+    next();
+});
 
 app.use(bodyParser.json())
 
