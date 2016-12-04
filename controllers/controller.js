@@ -1,16 +1,16 @@
 const model = require('../models/model.js')
 
 module.exports.register = ({body: {username, password, role, name}}, res) => {
-    console.log(username, password, role, name)
+    console.log(username, password, role, name, email)
     if (role === 'supervisor') {
-        model.registerSupervisor(username, password, name, (err) => {
+        model.registerSupervisor(username, password, name, email, (err) => {
             if(err)
                 res.status(500).send('supervisor registration failed')
             else
                 res.status(201).send('Registered Supervisor' )
         })
     } else if (role === 'student') {
-        model.registerStudent(username, password, name, (err) => {
+        model.registerStudent(username, password, name, email, (err) => {
             if(err)
                 res.status(500).send('student registration failed')
             else
