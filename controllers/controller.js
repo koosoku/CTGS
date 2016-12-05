@@ -1,23 +1,39 @@
 const model = require('../models/model.js')
 
-module.exports.register = ({body: {username, password, role, name, email}}, res) => {
-    if (role === 'supervisor') {
-        model.registerSupervisor(username, password, name, email, (err) => {
-            if(err)
-                res.status(500).send('supervisor registration failed')
-            else
-                res.status(201).send('Registered Supervisor' )
-        })
-    } else if (role === 'student') {
-        model.registerStudent(username, password, name, email, (err) => {
-            if(err)
-                res.status(500).send('student registration failed')
-            else
-                res.status(201).send('Registered Student' )
-        })
+module.exports.registerAdmin = (req, res) => {
+    var {username, password, name, email} = req.body
+    model.registerAdmin(username, password, name, email, (err) => {
+        if(err)
+            res.status(500).send('Admin registration failed')
+        else
+            res.status(201).send('Registered Admin' )
+    })
+}
+
+module.exports.register = (req, res) => {
+    var {username, password, role, name, email} = req.body
+    if (req.session.role === 'admin') {
+        if (role === 'supervisor') {
+            model.registerSupervisor(username, password, name, email, (err) => {
+                if(err)
+                    res.status(500).send('supervisor registration failed')
+                else
+                    res.status(201).send('Registered Supervisor' )
+            })
+        } else if (role === 'student') {
+            model.registerStudent(username, password, name, email, (err) => {
+                if(err)
+                    res.status(500).send('student registration failed')
+                else
+                    res.status(201).send('Registered Student' )
+            })
+        } else {
+            res.status(403).send('Role not specified or the specified role is wrong.')
+        }
     } else {
-        res.status(403).send('Role not specified or the specified role is wrong.')
+        res.status(401).send('You do not have the right to create users')
     }
+
 }
 
 module.exports.login = (req, res) => {
@@ -45,7 +61,19 @@ module.exports.login = (req, res) => {
             }
 
         })
-    } else {
+    } else if (role === 'admin') {
+        model.loginAdmin(username, password, (err) => {
+            if (err){
+                res.status(401).send('Login failed')
+            } else {
+                req.session.username = username
+                req.session.role = role
+                res.status(200).send('Successfully logged in!')
+            }
+
+        })
+    }
+    else {
         res.status(400).send('Wrong Role')
     }
 }

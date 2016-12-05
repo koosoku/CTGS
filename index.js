@@ -19,6 +19,7 @@ app.get('/', function(req,res){
 })
 
 app.post('/users', controller.register)
+app.post('/admins', controller.registerAdmin)
 app.post('/login', controller.login)
 app.post('/applications', controller.createNewApplication)
 app.put('/application', controller.makeRecommendation)
