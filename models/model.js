@@ -60,8 +60,8 @@ module.exports.loginAdmin = (username, password, callback) => {
     })
 }
 
-module.exports.createNewApplication = (registration, transportation, accomidation, meals, owner, supervisor, conference_detail, presentation_type, presentation_title, callback) => {
-    db.insert('applications', {registration, transportation, accomidation, meals, owner, supervisor, conference_detail, presentation_type, presentation_title}).run(callback)
+module.exports.createNewApplication = (registration, transportation, accommodation, meals, owner, supervisor, conference_detail, presentation_type, presentation_title, callback) => {
+    db.insert('applications', {registration, transportation, accommodation, meals, owner, supervisor, conference_detail, presentation_type, presentation_title}).run(callback)
 }
 
 module.exports.checkAuthorization = (username, applicationId, callback) => {
