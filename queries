@@ -1,3 +1,5 @@
+CREATE TYPE status AS ENUM ('approved', 'rejected', 'pending', 'make_changes');
+
 CREATE TABLE supervisors (
   username VARCHAR(50) PRIMARY KEY,
   password VARCHAR(100) NOT NULL,
@@ -23,16 +25,24 @@ CREATE TABLE admins (
 
 CREATE TABLE applications (
   id                 SERIAL,
-  registration       DOUBLE PRECISION,
+  registration       DOUBLE PRECISION ,
   transportation     DOUBLE PRECISION,
   accommodation      DOUBLE PRECISION,
   meals              DOUBLE PRECISION,
   owner              VARCHAR(50) NOT NULL,
   supervisor         VARCHAR(50) NOT NULL,
+  start_date         TIMESTAMP,
+  end_date           TIMESTAMP,
+  location           TEXT,
   recommendation     TEXT,
+  status             status,
   conference_detail  TEXT,
   presentation_type  TEXT,
   presentation_title TEXT,
   FOREIGN KEY (owner) REFERENCES students (username),
-  FOREIGN KEY (supervisor) REFERENCES supervisors (username)
+  FOREIGN KEY (supervisor) REFERENCES supervisors (username),
+  CHECK (registration > 0),
+  CHECK (transportation > 0),
+  CHECK (accommodation > 0),
+  CHECK (meals > 0)
 );

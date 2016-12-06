@@ -80,12 +80,11 @@ module.exports.login = (req, res) => {
 }
 
 module.exports.createNewApplication = (req, res) => {
-    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle} = req.body
+    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle, startDate, endDate, status, location} = req.body
 
-    if (req.session.role === 'supervisor') {
-        res.status(403).send("Supervisors cannot create applications")
-    } else if (req.session.role === 'student') {
-        model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, conferenceDetail, presentationType, presentationTitle, (err) => {
+   if (req.session.role === 'student') {
+        model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, conferenceDetail,
+                                    presentationType, presentationTitle, startDate, endDate, status, location, (err) => {
             if(err) {
                 res.status(500).send('Application Failed to Create')
                 console.error(err);
@@ -93,18 +92,17 @@ module.exports.createNewApplication = (req, res) => {
                 res.status(201).send('Successfully created an application!')
             }
         })
-    }
+    } else
+        res.status(403).send( "role " +req.session.role + " cannot create applications")
 }
 
 module.exports.makeRecommendation = (req, res) => {
     var {recommendation, applicationId} = req.body
 
-    if (req.session.role === 'student') {
-        res.status(403).send("Student cannot make recommendations")
-    } else if (req.session.role === 'supervisor') {
-        model.checkAuthorization(req.session.username, applicationId, (err) => {
+    if (req.session.role === 'supervisor') {
+        model.checkSupervisorHasAuthorization(req.session.username, applicationId, (err) => {
             if(err)
-                res.status(401).send('Supervisor does not have authorization')
+                res.status(401).send('Supervisor does not have authorization to make recommendations on this applicaion')
             else
                 model.makeRecommendation(recommendation, applicationId, (err) => {
                     if(err)
@@ -114,8 +112,37 @@ module.exports.makeRecommendation = (req, res) => {
                 })
         })
 
-    }
+    } else
+        res.status(403).send( "role " +req.session.role + " cannot make recommendations")
 }
+
+module.exports.changeApplication = (req, res) => {
+    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle, applicationId, startDate, endDate, status, location} = req.body
+    var fields = {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle, startDate, endDate, status, location}
+
+    if (req.session.role === 'student') {
+        model.checkStudentHasAuthorization(req.session.username, applicationId, (err) => {
+            if(err)
+                res.status(401).send('student does not have authorization to change this application')
+            else {
+                var changeArgs = {}
+                for (var field in fields) {
+                    if(fields[field]!= undefined)
+                        changeArgs[field] = fields[field]
+                }
+                model.changeApplication(changeArgs, applicationId, (err) => {
+                    if(err)
+                        res.status(500).send('Application Change failed')
+                    else
+                        res.status(201).send("Application Change successful")
+                })
+            }
+        })
+
+    } else
+        res.status(403).send( "role " +req.session.role + " cannot change applications")
+}
+
 
 module.exports.getStudents = (req, res) => {
     model.getStudents((err, students) => {

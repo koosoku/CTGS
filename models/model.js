@@ -51,22 +51,39 @@ module.exports.loginStudent = (username, password, callback) => {
 
 module.exports.loginAdmin = (username, password, callback) => {
     db.select('password').from('admins').where('username', username).row((err, row) => {
-        bcrypt.compare(password, row.password, function(err, passwordMatches) {
-            if(passwordMatches)
-                callback(null)
-            else
-                callback(true)
-        })
+        if (row) {
+            bcrypt.compare(password, row.password, function (err, passwordMatches) {
+                if (passwordMatches)
+                    callback(null)
+                else
+                    callback(true)
+            })
+        }
     })
 }
 
-module.exports.createNewApplication = (registration, transportation, accommodation, meals, owner, conference_detail, presentation_type, presentation_title, callback) => {
-    db.raw('INSERT INTO applications (registration, transportation, accommodation, meals, owner, supervisor, recommendation, conference_detail, presentation_type, presentation_title) VALUES ($1, $2, $3, $4, $5, (SELECT supervisor FROM students WHERE username = $6), NULL, $7, $8, $9);', [registration, transportation, accommodation, meals, owner, owner, conference_detail, presentation_type, presentation_title]).run(callback)
+module.exports.createNewApplication = (registration, transportation, accommodation, meals, owner,
+                                       conference_detail, presentation_type, presentation_title,
+                                       start_date, end_date, status, location, callback) => {
+    db.raw('INSERT INTO applications (registration, transportation, accommodation, meals, owner, supervisor,' +
+        ' recommendation, conference_detail, presentation_type, presentation_title, start_date, end_date, status,' +
+        ' location) VALUES ($1, $2, $3, $4, $5, (SELECT supervisor FROM students WHERE username = $6), NULL, $7,' +
+        ' $8, $9, $10, $11, $12, $13);', [registration, transportation, accommodation, meals, owner, owner,
+        conference_detail, presentation_type, presentation_title, start_date, end_date, status, location]).run(callback)
 }
 
-module.exports.checkAuthorization = (username, applicationId, callback) => {
+module.exports.checkSupervisorHasAuthorization = (username, applicationId, callback) => {
     db.select('supervisor').from('applications').where('id', applicationId).row((err,row) => {
-        if(username === row.supervisor)
+        if(row && username === row.supervisor)
+            callback(null)
+        else
+            callback(true)
+    })
+}
+
+module.exports.checkStudentHasAuthorization = (username, applicationId, callback) => {
+    db.select('owner').from('applications').where('id', applicationId).row((err,row) => {
+        if(row && username === row.owner)
             callback(null)
         else
             callback(true)
@@ -75,6 +92,11 @@ module.exports.checkAuthorization = (username, applicationId, callback) => {
 
 module.exports.makeRecommendation = (recommendation, applicationId, callback) => {
     db.update('applications', {recommendation}).where('id', applicationId).run(callback)
+}
+
+module.exports.changeApplication = (changeArgs, applicationId, callback) => {
+    console.log(changeArgs)
+    db.update('applications', changeArgs).where('id', applicationId).run(callback)
 }
 
 module.exports.getStudents = (callback) => {
@@ -100,3 +122,5 @@ module.exports.getApplications = (callback) => {
 module.exports.getApplicationByID = (id, callback) => {
     db.select('*').from('applications').where('id',id).rows(callback)
 }
+
+db.select('supervisor')
