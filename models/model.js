@@ -62,8 +62,8 @@ module.exports.loginAdmin = (username, password, callback) => {
     })
 }
 
-module.exports.createNewApplication = (registration, transportation, accommodation, meals, owner, conference_detail, presentation_type, presentation_title, callback) => {
-    db.raw('INSERT INTO applications (registration, transportation, accommodation, meals, owner, supervisor, recommendation, conference_detail, presentation_type, presentation_title) VALUES ($1, $2, $3, $4, $5, (SELECT supervisor FROM students WHERE username = $6), NULL, $7, $8, $9);', [registration, transportation, accommodation, meals, owner, owner, conference_detail, presentation_type, presentation_title]).run(callback)
+module.exports.createNewApplication = (registration, transportation, accommodation, meals, owner, conference_detail, presentation_type, presentation_title, start_date, end_date, status, callback) => {
+    db.raw('INSERT INTO applications (registration, transportation, accommodation, meals, owner, supervisor, recommendation, conference_detail, presentation_type, presentation_title, start_date, end_date, status) VALUES ($1, $2, $3, $4, $5, (SELECT supervisor FROM students WHERE username = $6), NULL, $7, $8, $9, $10, $11, $12);', [registration, transportation, accommodation, meals, owner, owner, conference_detail, presentation_type, presentation_title, start_date, end_date, status]).run(callback)
 }
 
 module.exports.checkSupervisorHasAuthorization = (username, applicationId, callback) => {

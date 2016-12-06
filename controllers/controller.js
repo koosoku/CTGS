@@ -79,10 +79,11 @@ module.exports.login = (req, res) => {
 }
 
 module.exports.createNewApplication = (req, res) => {
-    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle} = req.body
+    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle, startDate, endDate, status} = req.body
 
    if (req.session.role === 'student') {
-        model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, conferenceDetail, presentationType, presentationTitle, (err) => {
+        model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, conferenceDetail,
+                                    presentationType, presentationTitle, startDate, endDate, status, (err) => {
             if(err) {
                 res.status(500).send('Application Failed to Create')
                 console.error(err);
