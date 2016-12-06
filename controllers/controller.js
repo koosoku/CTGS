@@ -11,19 +11,19 @@ module.exports.registerAdmin = (req, res) => {
 }
 
 module.exports.register = (req, res) => {
-    var {username, password, role, name, email} = req.body
+    var {username, password, role, name, email, supervisor} = req.body
     if (req.session.role === 'admin') {
         if (role === 'supervisor') {
             model.registerSupervisor(username, password, name, email, (err) => {
                 if(err)
-                    res.status(500).send('supervisor registration failed')
+                    res.status(500).send('Supervisor Registration Failed')
                 else
                     res.status(201).send('Registered Supervisor' )
             })
         } else if (role === 'student') {
-            model.registerStudent(username, password, name, email, (err) => {
+            model.registerStudent(username, password, name, email, supervisor, (err) => {
                 if(err)
-                    res.status(500).send('student registration failed')
+                    res.status(500).send('Student Registration Failed')
                 else
                     res.status(201).send('Registered Student' )
             })
@@ -79,14 +79,15 @@ module.exports.login = (req, res) => {
 }
 
 module.exports.createNewApplication = (req, res) => {
-    var {registration, transportation, accommodation, meals, supervisor, conferenceDetail, presentationType, presentationTitle} = req.body
+    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle} = req.body
 
     if (req.session.role === 'supervisor') {
         res.status(403).send("Supervisors cannot create applications")
     } else if (req.session.role === 'student') {
-        model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, supervisor, conferenceDetail, presentationType, presentationTitle, (err) => {
+        model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, conferenceDetail, presentationType, presentationTitle, (err) => {
             if(err) {
                 res.status(500).send('Application Failed to Create')
+                console.error(err);
             } else {
                 res.status(201).send('Successfully created an application!')
             }
@@ -98,17 +99,17 @@ module.exports.makeRecommendation = (req, res) => {
     var {recommendation, applicationId} = req.body
 
     if (req.session.role === 'student') {
-        res.status(403).send("student cannot make recommendations")
+        res.status(403).send("Student cannot make recommendations")
     } else if (req.session.role === 'supervisor') {
         model.checkAuthorization(req.session.username, applicationId, (err) => {
             if(err)
-                res.status(401).send('Supevisor does not have authorization')
+                res.status(401).send('Supervisor does not have authorization')
             else
                 model.makeRecommendation(recommendation, applicationId, (err) => {
                     if(err)
-                        res.status(500).send('Recoomendation Failed')
+                        res.status(500).send('Recommendation failed')
                     else
-                        res.status(201).send("Recommendation made")
+                        res.status(201).send("Recommendation successful")
                 })
         })
 
@@ -143,6 +144,21 @@ module.exports.getStudentsApplications = (req, res) => {
                 data: applications
             })
     })
+}
+
+module.exports.getSupervisors = (req, res) => {
+  model.getSupervisors((err, supervisors) => {
+    if(err)
+        res.status(500).send({
+            err,
+            data: null
+        })
+    else
+        res.status(200).send({
+            err: null,
+            data: supervisors
+        })
+  })
 }
 
 
