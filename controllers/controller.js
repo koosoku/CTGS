@@ -79,11 +79,11 @@ module.exports.login = (req, res) => {
 }
 
 module.exports.createNewApplication = (req, res) => {
-    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle, startDate, endDate, status} = req.body
+    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle, startDate, endDate, status, location} = req.body
 
    if (req.session.role === 'student') {
         model.createNewApplication(registration, transportation, accommodation, meals, req.session.username, conferenceDetail,
-                                    presentationType, presentationTitle, startDate, endDate, status, (err) => {
+                                    presentationType, presentationTitle, startDate, endDate, status, location, (err) => {
             if(err) {
                 res.status(500).send('Application Failed to Create')
                 console.error(err);
@@ -116,8 +116,8 @@ module.exports.makeRecommendation = (req, res) => {
 }
 
 module.exports.changeApplication = (req, res) => {
-    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle, applicationId} = req.body
-    var fields = {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle}
+    var {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle, applicationId, startDate, endDate, status, location} = req.body
+    var fields = {registration, transportation, accommodation, meals, conferenceDetail, presentationType, presentationTitle, startDate, endDate, status, location}
 
     if (req.session.role === 'student') {
         model.checkStudentHasAuthorization(req.session.username, applicationId, (err) => {

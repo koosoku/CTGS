@@ -33,6 +33,7 @@ CREATE TABLE applications (
   supervisor         VARCHAR(50) NOT NULL,
   start_date         TIMESTAMP,
   end_date           TIMESTAMP,
+  location           TEXT,
   recommendation     TEXT,
   status             status,
   conference_detail  TEXT,
