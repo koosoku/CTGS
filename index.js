@@ -29,5 +29,7 @@ app.get('/supervisors', controller.getSupervisors)
 app.get('/supervisor/applications/:username', controller.getSupervisorApplications)
 app.get('/applications', controller.getApplications)
 app.get('/application/:id', controller.getApplicationByID)
+app.get('/maps/search', controller.searchPlaces)
+app.get('/maps/url', controller.getMapsURL)
 
 app.listen(8080)

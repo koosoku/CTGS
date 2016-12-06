@@ -1,4 +1,5 @@
 const model = require('../models/model.js')
+const request = require('request');
 
 module.exports.registerAdmin = (req, res) => {
     var {username, password, name, email} = req.body
@@ -205,4 +206,39 @@ module.exports.getApplicationByID = (req, res) => {
                 data: applications
             })
     })
+}
+
+module.exports.searchPlaces = (req, res) => {
+  let {input} = req.query;
+  request(`https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&types=geocode&key=${process.env.GOOGLE_MAPS_API_KEY}`, (err, response, body) => {
+    body = JSON.parse(body);
+    if (err)
+      res.status(response.statusCode).send({
+        err,
+        data: null
+      });
+    else
+      res.status(200).send({
+        err: null,
+        data: body.predictions
+      })
+  });
+}
+
+module.exports.getMapsURL = (req, res) => {
+  let {placeID} = req.query;
+  request(`https://maps.googleapis.com/maps/api/place/details/json?key=${process.env.GOOGLE_MAPS_API_KEY}&placeid=${placeID}`, (err, response, body) => {
+    body = JSON.parse(body)
+    if (err)
+    res.status(response.statusCode).send({
+      err,
+      data: null
+    })
+    else {
+      res.status(200).send({
+        err: null,
+        data: body.result.url
+      })
+    }
+  })
 }
