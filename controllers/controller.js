@@ -102,7 +102,7 @@ module.exports.makeRecommendation = (req, res) => {
     if (req.session.role === 'supervisor') {
         model.checkSupervisorHasAuthorization(req.session.username, applicationId, (err) => {
             if(err)
-                res.status(401).send('Supervisor does not have authorization to make recommendations on this applicaion')
+                res.status(401).send('Supervisor does not have authorization')
             else
                 model.makeRecommendation(recommendation, applicationId, (err) => {
                     if(err)
@@ -113,7 +113,7 @@ module.exports.makeRecommendation = (req, res) => {
         })
 
     } else
-        res.status(403).send( "role " +req.session.role + " cannot make recommendations")
+        res.status(403).send(req.session.role + " cannot make recommendations")
 }
 
 module.exports.changeApplication = (req, res) => {
@@ -264,7 +264,10 @@ module.exports.getMapsURL = (req, res) => {
     else {
       res.status(200).send({
         err: null,
-        data: body.result.url
+        data: {
+          name: body.result.name,
+          url: body.result.url
+        }
       })
     }
   })
