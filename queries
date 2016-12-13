@@ -1,4 +1,4 @@
-CREATE TYPE status AS ENUM ('approved', 'rejected', 'pending', 'make_changes');
+CREATE TYPE status AS ENUM ('Approved', 'Rejected', 'Pending', 'Make Changes');
 
 CREATE TABLE supervisors (
   username VARCHAR(50) PRIMARY KEY,
@@ -25,7 +25,7 @@ CREATE TABLE admins (
 
 CREATE TABLE applications (
   id                 SERIAL,
-  registration       DOUBLE PRECISION ,
+  registration       DOUBLE PRECISION,
   transportation     DOUBLE PRECISION,
   accommodation      DOUBLE PRECISION,
   meals              DOUBLE PRECISION,
