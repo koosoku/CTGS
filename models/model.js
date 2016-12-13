@@ -122,5 +122,3 @@ module.exports.getApplications = (callback) => {
 module.exports.getApplicationByID = (id, callback) => {
     db.select('*').from('applications').where('id',id).rows(callback)
 }
-
-db.select('supervisor')
